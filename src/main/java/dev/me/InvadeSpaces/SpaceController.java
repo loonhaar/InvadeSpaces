@@ -21,6 +21,7 @@ public class SpaceController {
 
 	@GetMapping("")
 	public ResponseEntity<List<Space>> findAll() {
+		System.out.println(spaceService.findAll().toString());
 		return ResponseEntity.ok(spaceService.findAll());
 	}
 }
