@@ -16,4 +16,8 @@ public class SpaceService {
 	public List<Space> findAll() {
 		return spaceRepository.findAll();
 	}
+
+    public List<Space> findByName(String name) {
+        return spaceRepository.findByName(name);
+    }
 }
