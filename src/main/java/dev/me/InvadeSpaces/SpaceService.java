@@ -20,4 +20,10 @@ public class SpaceService {
     public List<Space> findByName(String name) {
         return spaceRepository.findByName(name);
     }
+
+	public Space addSpace(String name, int capacity) {
+		Space newSpace = new Space(name, capacity);
+		spaceRepository.save(newSpace);
+		return newSpace;
+	}
 }

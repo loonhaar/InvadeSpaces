@@ -8,7 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "Space")
 public class Space {
@@ -24,6 +26,11 @@ public class Space {
 	@Column
 	@JsonProperty("Capacity")
 	private int capacity;
+
+	public Space(String name, int capacity) {
+		this.name = name;
+		this.capacity = capacity;
+	}
 
 	@Override
 	public String toString() {
