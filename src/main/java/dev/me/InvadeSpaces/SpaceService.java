@@ -26,4 +26,12 @@ public class SpaceService {
 		spaceRepository.save(newSpace);
 		return newSpace;
 	}
+
+	public Space deleteSpace(Long id) {
+		Space spaceToDelete = spaceRepository.findById(id).orElse(null);
+		if (spaceToDelete != null) {
+			spaceRepository.delete(spaceToDelete);
+		}
+		return spaceToDelete;
+	}
 }
