@@ -1,8 +1,11 @@
-package dev.me.InvadeSpaces;
+package dev.me.InvadeSpaces.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+
+import dev.me.InvadeSpaces.entity.Space;
+import dev.me.InvadeSpaces.repository.SpaceRepository;
 
 @Service
 public class SpaceService {

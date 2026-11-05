@@ -1,4 +1,4 @@
-package dev.me.InvadeSpaces;
+package dev.me.InvadeSpaces.controller;
 
 import java.util.List;
 
@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import dev.me.InvadeSpaces.entity.Space;
+import dev.me.InvadeSpaces.service.SpaceService;
 
 @RestController
 @RequestMapping("/spaces")

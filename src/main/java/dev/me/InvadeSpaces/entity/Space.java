@@ -1,4 +1,4 @@
-package dev.me.InvadeSpaces;
+package dev.me.InvadeSpaces.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
