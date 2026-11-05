@@ -32,7 +32,11 @@ public class SpaceController {
 
     @GetMapping("/name")
     public ResponseEntity<List<Space>> findByName(@RequestParam("n") String name) {
-        return ResponseEntity.ok(spaceService.findByName(name));
+        try {
+			return ResponseEntity.ok(spaceService.findByName(name));
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
     }
 
 	@GetMapping("/add")
@@ -43,6 +47,7 @@ public class SpaceController {
 		Space newSpace = spaceService.addSpace(name, capacity);
 		var response = new SpaceResponse("Given space was created", newSpace);
 		return ResponseEntity.ok(response);
+		// change status to 201 created
 	}
 
 	@GetMapping("/delete")
@@ -61,4 +66,26 @@ public class SpaceController {
 
 		return ResponseEntity.status(status).body(response);
 	}
+
+	@GetMapping("/update")
+	public ResponseEntity<SpaceResponse> updateSpace(
+		@RequestParam Long id,
+		@RequestParam("n") String name,
+		@RequestParam("c") int capacity) {
+
+		Space updatedSpace = spaceService.updateSpace(id, name, capacity);
+		HttpStatus status;
+		SpaceResponse response;
+
+		if (updatedSpace == null) {
+			response = new SpaceResponse("No space with the given id was found", null);
+			status = HttpStatus.NOT_FOUND;
+		} else {
+			response = new SpaceResponse("Given space was updated", updatedSpace);
+			status = HttpStatus.OK;
+		}
+
+		return ResponseEntity.status(status).body(response);
+	}
+	
 }

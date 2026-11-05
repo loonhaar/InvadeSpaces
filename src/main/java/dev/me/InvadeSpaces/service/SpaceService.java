@@ -21,7 +21,10 @@ public class SpaceService {
 	}
 
     public List<Space> findByName(String name) {
-        return spaceRepository.findByName(name);
+        return spaceRepository
+			.findByNameIgnoreCase(name)
+			.orElseThrow(
+				() -> new RuntimeException("No spaces found with given name"));
     }
 
 	public Space addSpace(String name, int capacity) {
@@ -36,5 +39,15 @@ public class SpaceService {
 			spaceRepository.delete(spaceToDelete);
 		}
 		return spaceToDelete;
+	}
+
+	public Space updateSpace(Long id, String name, int capacity) {
+		Space spaceToUpdate = spaceRepository.findById(id).orElse(null);
+		if (spaceToUpdate != null) {
+			spaceToUpdate.setName(name);
+			spaceToUpdate.setCapacity(capacity);
+			spaceRepository.save(spaceToUpdate);
+		}
+		return spaceToUpdate;
 	}
 }
