@@ -34,20 +34,21 @@ public class SpaceService {
 	}
 
 	public Space deleteSpace(Long id) {
-		Space spaceToDelete = spaceRepository.findById(id).orElse(null);
-		if (spaceToDelete != null) {
-			spaceRepository.delete(spaceToDelete);
-		}
+		Space spaceToDelete = spaceRepository.findById(id).orElseThrow(
+			() -> new RuntimeException("No space found with given id"));
+
+		spaceRepository.delete(spaceToDelete);
 		return spaceToDelete;
 	}
 
 	public Space updateSpace(Long id, String name, int capacity) {
-		Space spaceToUpdate = spaceRepository.findById(id).orElse(null);
-		if (spaceToUpdate != null) {
-			spaceToUpdate.setName(name);
-			spaceToUpdate.setCapacity(capacity);
-			spaceRepository.save(spaceToUpdate);
-		}
+		Space spaceToUpdate = spaceRepository.findById(id).orElseThrow(
+			() -> new RuntimeException("No space found with given id"));
+
+		spaceToUpdate.setName(name);
+		spaceToUpdate.setCapacity(capacity);
+		spaceRepository.save(spaceToUpdate);
+
 		return spaceToUpdate;
 	}
 }

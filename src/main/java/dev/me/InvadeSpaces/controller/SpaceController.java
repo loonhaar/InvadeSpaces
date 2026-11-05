@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +34,9 @@ public class SpaceController {
 	}
 
     @GetMapping("/name")
-    public ResponseEntity<List<Space>> findByName(@RequestParam("n") String name) {
+    public ResponseEntity<List<Space>> findByName(
+		@RequestParam("n") String name) {
+
         try {
 			return ResponseEntity.ok(spaceService.findByName(name));
 		} catch (RuntimeException e) {
@@ -39,53 +44,55 @@ public class SpaceController {
 		}
     }
 
-	@GetMapping("/add")
+	@PostMapping("/add")
 	public ResponseEntity<SpaceResponse> addSpace(
 		@RequestParam("n") String name,
 		@RequestParam("c") int capacity) {
 
 		Space newSpace = spaceService.addSpace(name, capacity);
 		var response = new SpaceResponse("Given space was created", newSpace);
-		return ResponseEntity.ok(response);
-		// change status to 201 created
+		return ResponseEntity.created(null).body(response);
 	}
 
-	@GetMapping("/delete")
+	@DeleteMapping("/delete")
 	public ResponseEntity<SpaceResponse> deleteSpace(@RequestParam Long id) {
-		Space deletedSpace = spaceService.deleteSpace(id);
 		HttpStatus status;
 		SpaceResponse response;
 
-		if (deletedSpace == null) {
-			response = new SpaceResponse("No space with the given id was found", null);
-			status = HttpStatus.NOT_FOUND;
-		} else {
-			response = new SpaceResponse("Given space was deleted", deletedSpace);
+		try {
+			Space deletedSpace = spaceService.deleteSpace(id);
+			response = new SpaceResponse(
+				"Given space was deleted", deletedSpace);
 			status = HttpStatus.OK;
+		} catch (RuntimeException e) {
+			response = new SpaceResponse(
+				"No space with the given id was found", null);
+			status = HttpStatus.NOT_FOUND;
 		}
 
 		return ResponseEntity.status(status).body(response);
 	}
 
-	@GetMapping("/update")
+	@PutMapping("/update")
 	public ResponseEntity<SpaceResponse> updateSpace(
 		@RequestParam Long id,
 		@RequestParam("n") String name,
 		@RequestParam("c") int capacity) {
 
-		Space updatedSpace = spaceService.updateSpace(id, name, capacity);
 		HttpStatus status;
 		SpaceResponse response;
 
-		if (updatedSpace == null) {
-			response = new SpaceResponse("No space with the given id was found", null);
-			status = HttpStatus.NOT_FOUND;
-		} else {
-			response = new SpaceResponse("Given space was updated", updatedSpace);
+		try {
+			Space updatedSpace = spaceService.updateSpace(id, name, capacity);
+			response = new SpaceResponse(
+				"Given space was updated", updatedSpace);
 			status = HttpStatus.OK;
+		} catch (RuntimeException e) {
+			response = new SpaceResponse(
+				"No space with the given id was found", null);
+			status = HttpStatus.NOT_FOUND;
 		}
 
 		return ResponseEntity.status(status).body(response);
 	}
-	
 }

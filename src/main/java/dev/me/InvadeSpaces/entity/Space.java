@@ -29,6 +29,8 @@ public class Space {
 	@JsonProperty("Capacity")
 	private int capacity;
 
+	public Space() {}
+
 	public Space(String name, int capacity) {
 		this.name = name;
 		this.capacity = capacity;

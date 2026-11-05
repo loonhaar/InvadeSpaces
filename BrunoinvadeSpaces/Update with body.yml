@@ -1,0 +1,24 @@
+info:
+  name: Update with body
+  type: http
+  seq: 3
+
+http:
+  method: PUT
+  url: localhost:8080/spaces/update
+  body:
+    type: json
+    data: |-
+      {
+        "id": 2,
+        "name": "Cobble stone",
+        "capacity": 11
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -12,4 +12,5 @@ import dev.me.InvadeSpaces.entity.Space;
 public interface SpaceRepository extends JpaRepository<Space, Long> {
 	List<Space> findByName(String name);
 	Optional<List<Space>> findByNameIgnoreCase(String name);
+	
 }
