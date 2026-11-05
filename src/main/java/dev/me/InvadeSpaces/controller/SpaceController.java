@@ -38,7 +38,7 @@ public class SpaceController {
 		@RequestParam("n") String name) {
 
         try {
-			return ResponseEntity.ok(spaceService.findByName(name));
+			return ResponseEntity.ok(spaceService.findByNameIgnoreCase(name));
 		} catch (RuntimeException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 		}

@@ -1,7 +1,7 @@
 info:
-  name: Delete
+  name: Delete ok
   type: http
-  seq: 4
+  seq: 1
 
 http:
   method: DELETE
@@ -11,6 +11,14 @@ http:
       value: "1"
       type: query
   auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("responds with 200", () => {
+          expect(res.getStatus()).equals(200)
+        });
 
 settings:
   encodeUrl: true

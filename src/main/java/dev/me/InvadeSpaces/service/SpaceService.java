@@ -20,7 +20,7 @@ public class SpaceService {
 		return spaceRepository.findAll();
 	}
 
-    public List<Space> findByName(String name) {
+    public List<Space> findByNameIgnoreCase(String name) {
         return spaceRepository
 			.findByNameIgnoreCase(name)
 			.orElseThrow(

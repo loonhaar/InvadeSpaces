@@ -1,0 +1,28 @@
+info:
+  name: Delete not found
+  type: http
+  seq: 2
+
+http:
+  method: DELETE
+  url: localhost:8080/spaces/delete?id=4999
+  params:
+    - name: id
+      value: "4999"
+      type: query
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("responds with 404 not found", () => {
+          expect(res.getStatus()).equals(404)
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

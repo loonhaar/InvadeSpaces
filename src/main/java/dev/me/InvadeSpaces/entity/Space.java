@@ -8,13 +8,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "Space")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Space {
 
 	@Id 
@@ -28,8 +32,6 @@ public class Space {
 	@Column
 	@JsonProperty("Capacity")
 	private int capacity;
-
-	public Space() {}
 
 	public Space(String name, int capacity) {
 		this.name = name;
