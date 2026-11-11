@@ -5,10 +5,10 @@ info:
 
 http:
   method: DELETE
-  url: localhost:8080/spaces/delete?id=4999
+  url: localhost:8080/spaces/?id=499999999
   params:
     - name: id
-      value: "4999"
+      value: "499999999"
       type: query
   auth: inherit
 
@@ -17,7 +17,7 @@ runtime:
     - type: tests
       code: |-
         test("responds with 404 not found", () => {
-          expect(res.getStatus()).equals(404)
+          expect(res.getStatus()).equals(404);
         });
 
 settings:

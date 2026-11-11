@@ -1,0 +1,37 @@
+info:
+  name: Update id not foudn
+  type: http
+  seq: 3
+
+http:
+  method: PUT
+  url: localhost:8080/spaces/99999999
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Oak panks",
+        "capacity": 64
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("responds with 404 not found", () => {
+          expect(res.getStatus()).equals(404);
+        });
+
+        test("returns null for the space parameter and a proper message", () => {
+          const response = res.getBody();
+          expect(response.space).to.equal(null);
+          expect(response.message).to.equal("No space with the given id was found");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

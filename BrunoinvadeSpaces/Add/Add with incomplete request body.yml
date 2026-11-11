@@ -1,0 +1,30 @@
+info:
+  name: Add with incomplete request body
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: localhost:8080/spaces
+  body:
+    type: json
+    data: |-
+      {
+        
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("responds with 400 bad request", function() {
+            expect(res.status).to.equal(400);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

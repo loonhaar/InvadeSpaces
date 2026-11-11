@@ -5,11 +5,7 @@ info:
 
 http:
   method: GET
-  url: localhost:8080/spaces/name?n=ughregjakgj
-  params:
-    - name: n
-      value: ughregjakgj
-      type: query
+  url: localhost:8080/spaces/ughregj
   auth: inherit
 
 runtime:
@@ -17,7 +13,13 @@ runtime:
     - type: tests
       code: |-
         test("responds with 404 not found", () => {
-          expect(res.getStatus()).equals(404)
+          expect(res.getStatus()).equals(404);
+        });
+
+        test("returns null for the space parameter and a proper message", () => {
+          const response = res.getBody();
+          expect(response.space).to.equal(null);
+          expect(response.message).to.equal("No space was found with the given name: ughregj");
         });
 
 settings:

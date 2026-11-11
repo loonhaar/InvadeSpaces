@@ -1,0 +1,40 @@
+info:
+  name: Update ok
+  type: http
+  seq: 1
+
+http:
+  method: PUT
+  url: localhost:8080/spaces/2
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Cobble stone",
+        "capacity": 11
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("responds with 200 ok", () => {
+          expect(res.getStatus()).equals(200);
+        });
+
+        test("returns details about the updated space", () => {
+          const body = res.getBody();
+          
+          expect(body).to.have.property("message", "Given space was updated");
+          expect(body.space.id).to.equal(2);
+          expect(body.space.Name).to.equal("Cobble stone");
+          expect(body.space.Capacity).to.equal(11);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

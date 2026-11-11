@@ -1,0 +1,32 @@
+info:
+  name: Find one by name ok
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: localhost:8080/spaces/grass
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("responds with 200 ok", () => {
+          expect(res.getStatus()).equals(200)
+        });
+
+        test("returns the details of found space", () => {
+          const space = res.getBody()[0];
+          
+          expect(space).to.have.property("id");
+          expect(space.Name).to.equal("Grass");
+          expect(space.Capacity).to.equal(1);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

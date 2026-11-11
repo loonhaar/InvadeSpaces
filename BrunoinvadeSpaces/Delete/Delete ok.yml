@@ -5,19 +5,24 @@ info:
 
 http:
   method: DELETE
-  url: localhost:8080/spaces/delete?id=1
-  params:
-    - name: id
-      value: "1"
-      type: query
+  url: localhost:8080/spaces/1
   auth: inherit
 
 runtime:
   scripts:
     - type: tests
       code: |-
-        test("responds with 200", () => {
-          expect(res.getStatus()).equals(200)
+        test("responds with 200 ok", () => {
+          expect(res.getStatus()).equals(200);
+        });
+
+        test("returns details about the deleted space", () => {
+          const body = res.getBody();
+          
+          expect(body).to.have.property("message", "Given space was deleted");
+          expect(body.space).to.have.property("id");
+          expect(body.space.Name).to.equal("Grass");
+          expect(body.space.Capacity).to.equal(1);
         });
 
 settings:
