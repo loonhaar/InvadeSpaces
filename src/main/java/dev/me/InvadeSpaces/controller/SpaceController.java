@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,22 +23,22 @@ public class SpaceController {
 
 	private final SpaceService spaceService;
 
+    public record SpaceRequest(String name, int capacity) {}
+
 	public record SpaceResponse(String message, Space space) {}
 
 	public SpaceController(SpaceService spaceService) {
 		this.spaceService = spaceService;
 	}
 
-	@GetMapping("")
+	@GetMapping
 	public ResponseEntity<List<Space>> findAll() {
 		System.out.println(spaceService.findAll().toString());
 		return ResponseEntity.ok(spaceService.findAll());
 	}
 
-    @GetMapping("/name")
-    public ResponseEntity<List<Space>> findByName(
-		@RequestParam("n") String name) {
-
+    @GetMapping("{name}")
+    public ResponseEntity<List<Space>> findByName(@PathVariable String name) {
 
 		var foundSpaces = spaceService.findByNameIgnoreCase(name);
 		if (foundSpaces.isEmpty()) {
@@ -45,17 +47,15 @@ public class SpaceController {
 		return ResponseEntity.ok(foundSpaces);
     }
 
-	@PostMapping("/add")
-	public ResponseEntity<SpaceResponse> addSpace(
-		@RequestParam("n") String name,
-		@RequestParam("c") int capacity) {
+	@PostMapping
+	public ResponseEntity<SpaceResponse> addSpace(@RequestBody SpaceRequest request) {
 
-		Space newSpace = spaceService.addSpace(name, capacity);
+		Space newSpace = spaceService.addSpace(request.name(), request.capacity());
 		var response = new SpaceResponse("Given space was created", newSpace);
 		return ResponseEntity.created(null).body(response);
 	}
 
-	@DeleteMapping("/delete")
+	@DeleteMapping
 	public ResponseEntity<SpaceResponse> deleteSpace(@RequestParam Long id) {
 		HttpStatus status;
 		SpaceResponse response;
@@ -74,17 +74,16 @@ public class SpaceController {
 		return ResponseEntity.status(status).body(response);
 	}
 
-	@PutMapping("/update")
+	@PutMapping
 	public ResponseEntity<SpaceResponse> updateSpace(
 		@RequestParam Long id,
-		@RequestParam("n") String name,
-		@RequestParam("c") int capacity) {
+		@RequestBody SpaceRequest request) {
 
 		HttpStatus status;
 		SpaceResponse response;
 
 		try {
-			Space updatedSpace = spaceService.updateSpace(id, name, capacity);
+			Space updatedSpace = spaceService.updateSpace(id, request.name(), request.capacity());
 			response = new SpaceResponse(
 				"Given space was updated", updatedSpace);
 			status = HttpStatus.OK;
