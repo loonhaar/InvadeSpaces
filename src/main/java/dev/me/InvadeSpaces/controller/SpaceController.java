@@ -37,11 +37,12 @@ public class SpaceController {
     public ResponseEntity<List<Space>> findByName(
 		@RequestParam("n") String name) {
 
-        try {
-			return ResponseEntity.ok(spaceService.findByNameIgnoreCase(name));
-		} catch (RuntimeException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+		var foundSpaces = spaceService.findByNameIgnoreCase(name);
+		if (foundSpaces.isEmpty()) {
+			throw new RuntimeException("No spaces with the given name were found");
 		}
+		return ResponseEntity.ok(foundSpaces);
     }
 
 	@PostMapping("/add")

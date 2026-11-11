@@ -22,9 +22,7 @@ public class SpaceService {
 
     public List<Space> findByNameIgnoreCase(String name) {
         return spaceRepository
-			.findByNameIgnoreCase(name)
-			.orElseThrow(
-				() -> new RuntimeException("No spaces found with given name"));
+			.findByNameIgnoreCase(name);
     }
 
 	public Space addSpace(String name, int capacity) {
