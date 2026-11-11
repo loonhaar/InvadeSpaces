@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.me.InvadeSpaces.entity.Space;
@@ -26,6 +25,7 @@ public class SpaceController {
     public record SpaceRequest(String name, int capacity) {}
 
 	public record SpaceResponse(String message, Space space) {}
+    public record SpaceResponseL(String message, List<Space> space) {}
 
 	public SpaceController(SpaceService spaceService) {
 		this.spaceService = spaceService;
@@ -38,13 +38,19 @@ public class SpaceController {
 	}
 
     @GetMapping("{name}")
-    public ResponseEntity<List<Space>> findByName(@PathVariable String name) {
+    public ResponseEntity<Object> findByName(@PathVariable String name) {
 
-		var foundSpaces = spaceService.findByNameIgnoreCase(name);
+		HttpStatus status;
+		SpaceResponse response;
+        var foundSpaces = spaceService.findByNameIgnoreCase(name);
+
 		if (foundSpaces.isEmpty()) {
-			throw new RuntimeException("No spaces with the given name were found");
-		}
-		return ResponseEntity.ok(foundSpaces);
+            status = HttpStatus.NOT_FOUND;
+            response = new SpaceResponse("No space was found with the given name: " + name, null);
+            return ResponseEntity.status(status).body(response);
+		} else {
+            return ResponseEntity.ok(foundSpaces);
+        }
     }
 
 	@PostMapping
@@ -55,8 +61,8 @@ public class SpaceController {
 		return ResponseEntity.created(null).body(response);
 	}
 
-	@DeleteMapping
-	public ResponseEntity<SpaceResponse> deleteSpace(@RequestParam Long id) {
+	@DeleteMapping("{id}")
+	public ResponseEntity<SpaceResponse> deleteSpace(@PathVariable Long id) {
 		HttpStatus status;
 		SpaceResponse response;
 
@@ -66,17 +72,16 @@ public class SpaceController {
 				"Given space was deleted", deletedSpace);
 			status = HttpStatus.OK;
 		} catch (RuntimeException e) {
-			response = new SpaceResponse(
-				"No space with the given id was found", null);
+			response = new SpaceResponse("No space with the given id was found", null);
 			status = HttpStatus.NOT_FOUND;
 		}
 
 		return ResponseEntity.status(status).body(response);
 	}
 
-	@PutMapping
+	@PutMapping("{id}")
 	public ResponseEntity<SpaceResponse> updateSpace(
-		@RequestParam Long id,
+		@PathVariable Long id,
 		@RequestBody SpaceRequest request) {
 
 		HttpStatus status;
