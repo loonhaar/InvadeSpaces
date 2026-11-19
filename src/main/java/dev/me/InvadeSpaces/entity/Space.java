@@ -23,6 +23,7 @@ public class Space {
 
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonProperty
 	private Long id;
 
 	@Column

@@ -14,7 +14,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -22,6 +24,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class Reservation {
 
 	@Id 
@@ -30,13 +34,16 @@ public class Reservation {
 	private Long id;
 
 	@Column
+	@JsonProperty
 	private LocalDateTime startTime;
 
 	@Column
+	@JsonProperty
 	private LocalDateTime endTime;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "space_id", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "space_id", nullable = false)
+	@JsonProperty
 	private Space space;
 
 	@Override
