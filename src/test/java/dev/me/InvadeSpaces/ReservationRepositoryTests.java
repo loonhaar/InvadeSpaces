@@ -11,7 +11,7 @@ import dev.me.InvadeSpaces.entity.Reservation;
 import dev.me.InvadeSpaces.entity.Space;
 import dev.me.InvadeSpaces.repository.ReservationRepository;
 import dev.me.InvadeSpaces.repository.SpaceRepository;
-
+	
 @DataJpaTest
 public class ReservationRepositoryTests {
 
