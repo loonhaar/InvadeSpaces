@@ -1,9 +1,12 @@
 package dev.me.InvadeSpaces;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -103,5 +106,87 @@ public class SpaceServiceTests {
         verify(spaceRepository).findByNameIgnoreCase(searchInput);
     }
 
-    
+    @Test
+    public void testAddSpace() {
+        // Arrange
+        var name = "Glazed Terracota";
+        var capacity = 100;
+
+        // Act
+        var created = spaceService.addSpace(name, capacity);
+
+        // Assert
+        Assertions.assertNotNull(created);
+        Assertions.assertEquals(name, created.getName());
+        Assertions.assertEquals(capacity, created.getCapacity());
+        verify(spaceRepository).save(created);
+    }
+
+    @Test
+    public void testDeleteSpaceFound() {
+        // Arrange
+        var id = 1L;
+        var existing = new Space("Loom", 12);
+        when(spaceRepository.findById(id)).thenReturn(Optional.of(existing));
+
+        // Act
+        var deleted = spaceService.deleteSpace(id);
+
+        // Assert
+        Assertions.assertEquals(existing, deleted);
+        verify(spaceRepository).findById(id);
+        verify(spaceRepository).delete(existing);
+    }
+
+    @Test
+    public void testDeleteSpaceNotFound() {
+        // Arrange
+        var id = 99L;
+        when(spaceRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Act
+        var exception = Assertions.assertThrows(
+            RuntimeException.class,
+            () -> spaceService.deleteSpace(id)
+        );
+
+        // Assert
+        Assertions.assertEquals("No space found with given id", exception.getMessage());
+        verify(spaceRepository).findById(id);
+        verify(spaceRepository, never()).delete(any());
+    }
+
+    @Test
+    public void testUpdateSpaceFound() {
+        // Arrange
+        var id = 1L;
+        var existing = new Space("Iron Ore", 5);
+        when(spaceRepository.findById(id)).thenReturn(Optional.of(existing));
+
+        // Act
+        var updated = spaceService.updateSpace(id, "Diamond Ore", 20);
+
+        // Assert
+        Assertions.assertEquals("Diamond Ore", updated.getName());
+        Assertions.assertEquals(20, updated.getCapacity());
+        verify(spaceRepository).findById(id);
+        verify(spaceRepository).save(existing);
+    }
+
+    @Test
+    public void testUpdateSpaceNotFound() {
+        // Arrange
+        var id = 99L;
+        when(spaceRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Act
+        var exception = Assertions.assertThrows(
+            RuntimeException.class, () -> spaceService.updateSpace(id, "USB Charger Block", 20)
+        );
+
+        // Assert
+        Assertions.assertEquals("No space found with given id", exception.getMessage());
+        verify(spaceRepository).findById(id);
+        verify(spaceRepository, never()).save(any());
+    }
 }
