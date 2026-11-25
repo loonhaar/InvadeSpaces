@@ -8,6 +8,20 @@ http:
   url: localhost:8080/rsvs
   auth: inherit
 
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("reponds with 200 ok", () => {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("returns 100 entities in the response", () => {
+          const rsvs = res.getBody();
+          expect(rsvs).to.be.an('array');
+          expect(rsvs.length).to.equal(100);
+        });
+
 settings:
   encodeUrl: true
   timeout: 0

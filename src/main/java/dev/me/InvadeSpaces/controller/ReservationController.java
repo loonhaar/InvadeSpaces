@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +30,8 @@ public class ReservationController {
 		return reservationService.findAllWithSpaces();
 	}
 
-	@GetMapping("/{id}")
-	public Reservation findById(Long id) {
+	@GetMapping("{id}")
+	public Reservation findById(@PathVariable Long id) {
 		return reservationService.findById(id);
 	}
 

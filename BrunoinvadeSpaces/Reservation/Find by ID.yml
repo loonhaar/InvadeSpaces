@@ -1,0 +1,33 @@
+info:
+  name: Find by ID
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: localhost:8080/rsvs/1
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("responds with 200 ok", () => {
+          expect(res.getStatus()).equals(200)
+        });
+
+        test("returns the details of found reservation", () => {
+          const rsv = res.getBody();
+          
+          expect(rsv).to.have.property("id");
+          expect(rsv.startTime).to.contain("2027-01-26T12:00:00");
+          expect(rsv.endTime).to.contain("2027-01-26T16:00:00");
+          expect(rsv.space.id).to.equal(19);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
