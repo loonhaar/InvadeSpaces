@@ -1,18 +1,19 @@
 package dev.me.InvadeSpaces.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.me.InvadeSpaces.entity.Reservation;
-import dev.me.InvadeSpaces.entity.Space;
 import dev.me.InvadeSpaces.service.ReservationService;
 
 @RestController
@@ -26,27 +27,65 @@ public class ReservationController {
 	}
 
 	@GetMapping
-	public List<Reservation> findAll() {
-		return reservationService.findAllWithSpaces();
+	public ResponseEntity<List<Reservation>> findAll() {
+		return ResponseEntity.ok(reservationService.findAllWithSpaces());
 	}
 
 	@GetMapping("{id}")
-	public Reservation findById(@PathVariable Long id) {
-		return reservationService.findById(id);
+	public ResponseEntity<Reservation> findById(@PathVariable Long id) {
+		try {
+            return ResponseEntity.ok(reservationService.findById(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
 	}
 
 	@PostMapping
-	public Reservation addReservation(Long id, LocalDateTime startTime, LocalDateTime endTime, Space space) {
-		return reservationService.addReservation(id, startTime, endTime, space);
+	public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
+		try {
+			Reservation created = reservationService.addReservation(
+				reservation.getId(),
+				reservation.getStartTime(),
+				reservation.getEndTime(),
+				reservation.getSpace()
+			);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+
+        } catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().build();
+        } catch (RuntimeException e) {
+			return ResponseEntity.badRequest().build();
+		}
 	}
 
-	@PutMapping
-	public Reservation updateReservation(Long id, LocalDateTime startTime, LocalDateTime endTime, Space space) {
-		return reservationService.updateReservation(id, startTime, endTime, space);
+	@PutMapping("{id}")
+	public ResponseEntity<Reservation> updateReservation(
+		@PathVariable Long id,
+		@RequestBody Reservation reservation) {
+		try {
+			Reservation updated = reservationService.updateReservation(
+				id,
+				reservation.getStartTime(),
+				reservation.getEndTime(),
+				reservation.getSpace()
+			);
+
+			return ResponseEntity.ok(updated);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (RuntimeException e) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
-	@DeleteMapping
-	public Reservation deleteReservation(Long id) {
-		return reservationService.deleteReservation(id);
+	@DeleteMapping("{id}")
+	public ResponseEntity<Reservation> deleteReservation(@PathVariable Long id) {
+		try {
+			return ResponseEntity.ok(reservationService.deleteReservation(id));
+		} catch (RuntimeException e) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 }

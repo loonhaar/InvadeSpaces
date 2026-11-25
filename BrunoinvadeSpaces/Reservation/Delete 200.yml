@@ -1,0 +1,33 @@
+info:
+  name: Delete 200
+  type: http
+  seq: 10
+
+http:
+  method: DELETE
+  url: localhost:8080/rsvs/6
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("responds with 200 ok", () => {
+          expect(res.getStatus()).equals(200);
+        });
+
+        test("returns details about the deleted reservation", () => {
+          const rsv = res.getBody();
+          
+          expect(rsv).to.have.property("id");
+          expect(rsv.startTime).to.equal("2026-11-06T08:45:00");
+          expect(rsv.endTime).to.equal("2026-11-06T13:45:00");
+          expect(rsv.space.id).to.equal(21);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

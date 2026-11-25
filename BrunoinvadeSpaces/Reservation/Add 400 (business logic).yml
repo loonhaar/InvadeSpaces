@@ -1,0 +1,34 @@
+info:
+  name: Add 400 (business logic)
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: localhost:8080/rsvs
+  body:
+    type: json
+    data: |-
+      {
+        "startTime": "2027-01-26T12:00:00",
+        "endTime": "2027-01-20T16:00:00",
+        "space": {
+          "id": 19
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 400", () => {
+          expect(res.getStatus()).to.equal(400);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -1,0 +1,40 @@
+info:
+  name: Add 201
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: localhost:8080/rsvs
+  body:
+    type: json
+    data: |-
+      {
+        "startTime": "2027-01-26T12:00:00",
+        "endTime": "2027-01-26T16:00:00",
+        "space": {
+          "id": 19
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("creates reservation and returns 201", () => {
+          expect(res.getStatus()).to.equal(201);
+
+          const rsv = res.getBody();
+          expect(rsv).to.have.property("id");
+          expect(rsv.startTime).to.contain("2027-01-26T12:00");
+          expect(rsv.endTime).to.contain("2027-01-26T16:00");
+          expect(rsv.space.id).to.equal(19);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

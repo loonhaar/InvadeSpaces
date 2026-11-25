@@ -1,0 +1,44 @@
+info:
+  name: Update 200
+  type: http
+  seq: 7
+
+http:
+  method: PUT
+  url: localhost:8080/rsvs/1
+  body:
+    type: json
+    data: |-
+      {
+        "startTime": "2027-01-27T12:00:00",
+        "endTime": "2027-01-27T16:00:00",
+        "space": {
+          "id": 21,
+          "Capacity": 2,
+          "Name": "idk"
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("updates details of the reservation and returns 200", () => {
+          expect(res.getStatus()).to.equal(200);
+
+          const rsv = res.getBody();
+          expect(rsv).to.have.property("id");
+          expect(rsv.startTime).to.contain("2027-01-27T12:00");
+          expect(rsv.endTime).to.contain("2027-01-27T16:00");
+          expect(rsv.space.id).to.equal(21);
+          expect(rsv.space.Name).to.equal("idk");
+          expect(rsv.space.Capacity).to.equal(2);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

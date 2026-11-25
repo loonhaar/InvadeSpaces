@@ -1,0 +1,36 @@
+info:
+  name: Update 400 (business logic)
+  type: http
+  seq: 8
+
+http:
+  method: PUT
+  url: localhost:8080/rsvs/1
+  body:
+    type: json
+    data: |-
+      {
+        "startTime": "2027-01-27T12:00:00",
+        "endTime": "2027-01-20T16:00:00", // end time earlier than start time
+        "space": {
+          "id": 21,
+          "Capacity": 2,
+          "Name": "idk"
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 400", () => {
+          expect(res.getStatus()).to.equal(400);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

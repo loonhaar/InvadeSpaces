@@ -1,0 +1,24 @@
+info:
+  name: Delete 404
+  type: http
+  seq: 11
+
+http:
+  method: DELETE
+  url: localhost:8080/rsvs/99999
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("responds with 404", () => {
+          expect(res.getStatus()).equals(404);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

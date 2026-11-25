@@ -1,0 +1,36 @@
+info:
+  name: Update 404
+  type: http
+  seq: 9
+
+http:
+  method: PUT
+  url: localhost:8080/rsvs/9999
+  body:
+    type: json
+    data: |-
+      {
+        "startTime": "2027-01-27T12:00:00",
+        "endTime": "2027-01-27T16:00:00",
+        "space": {
+          "id": 21,
+          "Capacity": 2,
+          "Name": "idk"
+        }
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("returns 404", () => {
+          expect(res.getStatus()).to.equal(404);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
